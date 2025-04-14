@@ -2,6 +2,7 @@ package com.example.elitego
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,15 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.elitego.data.CustomerApi
 import com.example.elitego.ui.theme.ElitegoTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     var showSplashScreen = true
+
+    @Inject
+    lateinit var customerApi: CustomerApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
@@ -66,6 +75,9 @@ class MainActivity : ComponentActivity() {
             ElitegoTheme {
                 BookingScreen()
 
+            }
+            if(::customerApi.isInitialized){
+                Log.d("MainActivity", "CustomerApi is initialized")
             }
         }
         CoroutineScope(Dispatchers.IO).launch {
